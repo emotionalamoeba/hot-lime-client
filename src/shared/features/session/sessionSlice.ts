@@ -26,11 +26,10 @@ export const sessionSlice = createSlice({
         addMessage: (state, action: PayloadAction<MessageUpdate>) => {
             let m: Message = {
                 Timestamp: new Date(),
-                Author: action.payload.userID,
+                Author: 'Broadcast',//action.payload.userID,
                 Read: false,
-                Recipient: 'Broadcast'
-
-
+                Recipient: 'Broadcast',
+                Text: action.payload.text
             };
 
             produce(state, draft => {
@@ -41,6 +40,13 @@ export const sessionSlice = createSlice({
                     if (conversation) {
 
                         conversation.History.push(m);
+                    }
+                    else {
+                        conversation = {
+                            History: [m],
+                            TextInput: '',
+                            userID: action.payload.userID
+                        } as Conversation;
                     }
                 }
                 // bonus, you can do array updated as well!

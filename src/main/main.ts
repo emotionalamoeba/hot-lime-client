@@ -1,6 +1,9 @@
 import path from 'path'
 import { format } from 'url'
 import { app, BrowserWindow, ipcMain, nativeTheme } from 'electron'
+import installExtension, {
+  REDUX_DEVTOOLS,
+  REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer'
 import { is } from 'electron-util'
 import HotlineSession, { Parameter } from './hotlineSession'
 
@@ -35,6 +38,16 @@ async function createWindow() {
 
   if (isDev) {
     win.loadURL('http://localhost:9080')
+
+    win.webContents.once("dom-ready", async () => {
+      await installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS])
+          .then((name) => console.log(`Added Extension:  ${name}`))
+          .catch((err) => console.log("An error occurred: ", err))
+          .finally(() => {
+              win.webContents.openDevTools();
+          });
+  });
+
   } else {
     win.loadURL(
       format({
@@ -96,12 +109,12 @@ ipcMain.handle('connection:sendPublicMessage', (args, text: string) => {
 })
 
 hotlineSession.setEventListener({
-  privateMessage: function (from: string, message: string): void {
+  privateMessage: function (from: number, message: string): void {
     console.log('Sending private message to frontend ' + JSON.stringify(message))
     win.webContents.send('connection:privateMessage', { 'from': from, 'text': message })
   },
   publicMessage: function (message: string): void {
-    console.log('Sending public message to frontend ' + JSON.stringify(message))
+    console.log('Sending inbound public message to frontend ' + JSON.stringify(message))
     win.webContents.send('connection:publicMessage', { 'from': 'Broadcast', 'text': message })
   },
   notifyDeleteUser: function (userID: number): void {

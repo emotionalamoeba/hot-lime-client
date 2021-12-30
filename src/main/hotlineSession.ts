@@ -167,7 +167,7 @@ class HotlineSession {
     }
 
     sendPublicMessage = (text: string) => {
-        console.log(`Sending public message ${text}`);
+        console.log(`Outbound public message ${text}`);
 
         if (!text) {
             text = 'Empty message';

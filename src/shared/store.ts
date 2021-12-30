@@ -4,6 +4,7 @@ import sessionReducer from './features/session/sessionSlice';
 import uiReducer from './features/ui/uiSlice';
 
 export const store = configureStore({
+    devTools: true,
     reducer: {
         settings: settingsReducer,
         session: sessionReducer,
