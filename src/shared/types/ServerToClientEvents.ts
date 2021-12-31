@@ -1,9 +1,9 @@
-import { UserListUpdate } from "./APITypes";
+import { MessageUpdate, UserListUpdate } from "./APITypes";
 
 interface ServerToClientEventListener {
 
     privateMessage(from: number, message: string): void;
-    publicMessage(message: string): void;
+    publicMessage(message: MessageUpdate): void;
     notifyChangeUser(userID: number, userName: string): void;
     notifyDeleteUser(userID: number): void;
     reportError(error: string): void;

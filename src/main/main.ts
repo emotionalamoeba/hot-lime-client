@@ -1,16 +1,17 @@
 import path from 'path'
 import { format } from 'url'
-import { app, BrowserWindow, ipcMain, nativeTheme } from 'electron'
+import { app, BrowserWindow, ipcMain, nativeTheme, session } from 'electron'
 import installExtension, {
   REDUX_DEVTOOLS,
-  REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer'
+  REACT_DEVELOPER_TOOLS
+} from 'electron-devtools-installer'
 import { is } from 'electron-util'
 import HotlineSession, { Parameter } from './hotlineSession'
 
 import Store from 'electron-store'
 import { KeyValuePair } from 'src/shared/KeyValuePair'
 import ServerToClientEventListener from 'src/shared/types/ServerToClientEvents'
-import { UserListUpdate } from 'src/shared/types/APITypes'
+import { MessageUpdate, UserListUpdate } from 'src/shared/types/APITypes'
 
 const store = new Store();
 
@@ -38,16 +39,6 @@ async function createWindow() {
 
   if (isDev) {
     win.loadURL('http://localhost:9080')
-
-    win.webContents.once("dom-ready", async () => {
-      await installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS])
-          .then((name) => console.log(`Added Extension:  ${name}`))
-          .catch((err) => console.log("An error occurred: ", err))
-          .finally(() => {
-              win.webContents.openDevTools();
-          });
-  });
-
   } else {
     win.loadURL(
       format({
@@ -77,7 +68,11 @@ async function createWindow() {
   })
 }
 
-app.on('ready', createWindow)
+app.whenReady().then(() => {
+  installExtension(REDUX_DEVTOOLS)
+    .then((name) => console.log(`Added Extension:  ${name}`))
+    .catch((err) => console.log('An error occurred: ', err));
+});
 
 app.on('window-all-closed', () => {
   if (!is.macos) {
@@ -113,9 +108,9 @@ hotlineSession.setEventListener({
     console.log('Sending private message to frontend ' + JSON.stringify(message))
     win.webContents.send('connection:privateMessage', { 'from': from, 'text': message })
   },
-  publicMessage: function (message: string): void {
+  publicMessage: function (message: MessageUpdate): void {
     console.log('Sending inbound public message to frontend ' + JSON.stringify(message))
-    win.webContents.send('connection:publicMessage', { 'from': 'Broadcast', 'text': message })
+    win.webContents.send('connection:publicMessage', message)
   },
   notifyDeleteUser: function (userID: number): void {
     win.webContents.send('connection:notifyDeleteUser', userID)

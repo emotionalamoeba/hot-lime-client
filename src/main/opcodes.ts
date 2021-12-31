@@ -32,5 +32,6 @@ export const paramcodes = {
     'USER_ID': 103,
     'USER_ICON_ID': 104,
     'OPTIONS': 113,
+    'CHAT_ID': 114,
     'USER_NAME_WITH_INFO': 300
 }

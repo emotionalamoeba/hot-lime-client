@@ -3,7 +3,7 @@ import { opcodeNames, opcodes, paramcodes } from './opcodes';
 
 import Store from 'electron-store'
 import ServerToClientEventListener from 'src/shared/types/ServerToClientEvents';
-import { UserDetails, UserListUpdate } from 'src/shared/types/APITypes';
+import { MessageUpdate, UserDetails, UserListUpdate } from 'src/shared/types/APITypes';
 import { UID } from 'src/shared/types/types';
 import { IntParameter, Parameter, TextParameter, UserNameWithInfoParameter } from './hotlineParameters';
 
@@ -328,7 +328,14 @@ class HotlineSession {
                     }
                     break;
                 case opcodes.SERVER_PUBLIC_MESSAGE:
-                    this.eventListener.publicMessage((parameters[0] as TextParameter).content);
+                    let chatID: number = (parameters.find(p => p.id === paramcodes.CHAT_ID) as IntParameter)?.content;
+                    let chatText: string = (parameters.find(p => p.id === paramcodes.DATA) as TextParameter)?.content;
+
+                    this.eventListener.publicMessage({
+                        sessionKey: this.sessionKey,
+                        text: chatText,
+                        userID: 'Broadcast'
+                    } as MessageUpdate);
                     break;
                 case opcodes.SERVER_NOTIFY_DELETE_USER:
                     this.eventListener.notifyDeleteUser((parameters[0] as IntParameter).content);
