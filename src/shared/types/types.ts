@@ -25,4 +25,4 @@ interface Message {
 
 interface Conversation { userID: number | 'Broadcast', TextInput: string, History: Message[] }
 
-export { Individual, Conversation, ChatEntity, Message, Server, UID }
+export { Individual, Conversation, SessionChatEntity, Message, Server, UID }

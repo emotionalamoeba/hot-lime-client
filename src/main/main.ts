@@ -72,6 +72,10 @@ app.whenReady().then(() => {
   installExtension(REDUX_DEVTOOLS)
     .then((name) => console.log(`Added Extension:  ${name}`))
     .catch((err) => console.log('An error occurred: ', err));
+}).then(() => {
+  if (win === null && app.isReady()) {
+    createWindow()
+  }
 });
 
 app.on('window-all-closed', () => {
@@ -79,13 +83,6 @@ app.on('window-all-closed', () => {
     app.quit()
   }
 })
-
-app.on('activate', () => {
-  if (win === null && app.isReady()) {
-    createWindow()
-  }
-})
-
 
 ipcMain.handle('connection:connect', () => {
   return hotlineSession.connect(store.get('serverAddress', '') as string);

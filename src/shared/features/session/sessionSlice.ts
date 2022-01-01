@@ -11,10 +11,12 @@ interface Session {
 }
 
 export interface SessionState {
+    messages: Message[];
     sessions: Session[];
 }
 
 const initialState: SessionState = {
+    messages: [],
     sessions: []
 };
 
@@ -32,16 +34,13 @@ export const sessionSlice = createSlice({
                 Text: action.payload.text
             };
 
-            return produce(state, draft => {
-                console.log(JSON.stringify(draft.sessions));
-                console.log(`session key ${action.payload.sessionKey}`);
-
-                const session = draft.sessions.find(s => s.sessionKey === action.payload.sessionKey);
+            produce(state, draft => {
+                let session = draft.sessions.find(s => s.sessionKey === action.payload.sessionKey);
 
                 if (session) {
                     let conversation = session.conversations.find(c => c.userID === action.payload.userID);
                     if (conversation) {
-                        console.log('adding to convo');
+
                         conversation.History.push(m);
                     }
                     else {
@@ -50,17 +49,24 @@ export const sessionSlice = createSlice({
                             TextInput: '',
                             userID: action.payload.userID
                         } as Conversation;
-
-                        console.log('adding new convo');
-                        session.conversations.push(conversation);
                     }
-                }
-                else {
-                    console.log('No session found');
                 }
                 // bonus, you can do array updated as well!
                 // draft.firstLevel.secondLevel.thirdLevel.property2[index] = someData;
             });
+
+            Object.assign({}, state, {
+                sessions: state.sessions.map(session => {
+                    if (session.sessionKey !== action.payload.sessionKey) {
+                        return session
+                    }
+
+                    return Object.assign({}, session, {
+                        conversations: session.conversations
+                        //todo add convo if first message
+                    })
+                })
+            })
         },
         setUserListForSession: (state, action: PayloadAction<UserListUpdate>) => {
 
