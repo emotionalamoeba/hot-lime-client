@@ -1,8 +1,8 @@
 
 // All of the Node.js APIs are available in the preload process.
 
-import { KeyValuePair } from "src/shared/KeyValuePair";
-import HotlineAPI from "src/shared/types/hotlineAPI";
+import { KeyValuePair } from "../shared/KeyValuePair.js";
+import HotlineAPI from "../shared/types/hotlineAPI.js";
 
 // It has the same sandbox as a Chrome extension.
 const { contextBridge, ipcRenderer } = require('electron')

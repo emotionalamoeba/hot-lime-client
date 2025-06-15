@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react'
 
 import { Col, Container, FormControl, InputGroup, Row } from 'react-bootstrap';
-import { selectConversationHistory } from 'src/shared/features/session/sessionSlice';
-import { getActiveConversation } from 'src/shared/features/ui/uiSlice';
-import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
-import { Message, UID } from 'src/shared/types/types';
+import { selectConversationHistory } from '../../shared/features/session/sessionSlice.js';
+import { getActiveConversation } from '../../shared/features/ui/uiSlice.js';
+import { useAppDispatch, useAppSelector } from '../../shared/hooks.js';
+import { Message } from '../../shared/types/types.js';
 
 export function ConversationHistory() {
 

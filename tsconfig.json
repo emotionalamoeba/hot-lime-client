@@ -1,19 +1,17 @@
 {
   "compilerOptions": {
-  "module": "commonjs",
-  "lib": [
-      "es6"
-  ],
-  "target": "es6",
-  "noImplicitAny": true,
-  "noImplicitThis": true,
-  "strictNullChecks": true,
-  "strictFunctionTypes": true,
-  "baseUrl": "../",
-  "typeRoots": [
-      "../"
-  ],
-  "types": [],
-  "noEmit": true,
-  "forceConsistentCasingInFileNames": true
-},
+    "target": "esnext",
+    "lib": ["DOM", "DOM.Iterable", "esnext"],
+    "types": ["vite/client"],
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react"
+  }
+}

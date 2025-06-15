@@ -9,7 +9,9 @@ export const opcodes = {
     'CLIENT_LOGIN': 107,
     'CLIENT_GET_USER_NAME_LIST': 300,
     'SERVER_NOTIFY_CHANGE_USER': 301,
-    'SERVER_NOTIFY_DELETE_USER': 302
+    'SERVER_NOTIFY_DELETE_USER': 302,
+
+    'SERVER_USER_ACCESS': 354
 };
 
 export const opcodeNames = {
@@ -23,7 +25,9 @@ export const opcodeNames = {
     105: 'CLIENT_PUBLIC_CHAT',
     300: 'CLIENT_GET_USER_NAME_LIST',
     301: 'SERVER_NOTIFY_CHANGE_USER',
-    302: 'SERVER_NOTIFY_DELETE_USER'
+    302: 'SERVER_NOTIFY_DELETE_USER',
+
+    354: 'SERVER_USER_ACCESS'
 };
 
 export const paramcodes = {
@@ -31,6 +35,7 @@ export const paramcodes = {
     'USER_NAME': 102,
     'USER_ID': 103,
     'USER_ICON_ID': 104,
+    'USER_ACCESS': 110,
     'OPTIONS': 113,
     'CHAT_ID': 114,
     'USER_NAME_WITH_INFO': 300

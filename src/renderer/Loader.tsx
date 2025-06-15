@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
-import { useAppDispatch } from 'src/shared/hooks';
-import { setServerAddress, setUserName } from 'src/shared/features/settings/settingsSlice';
+import { useAppDispatch } from '../shared/hooks.js';
+import { setServerAddress, setUserName } from '../shared/features/settings/settingsSlice.js';
 
 /**
  * TODO - there must be a better way to init the loading from store

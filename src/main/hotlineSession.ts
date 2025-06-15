@@ -1,11 +1,11 @@
 import net from 'net'
-import { opcodeNames, opcodes, paramcodes } from './opcodes';
+import { opcodeNames, opcodes, paramcodes } from './opcodes.js';
 
 import Store from 'electron-store'
-import ServerToClientEventListener from 'src/shared/types/ServerToClientEvents';
-import { MessageUpdate, UserDetails, UserListUpdate } from 'src/shared/types/APITypes';
-import { UID } from 'src/shared/types/types';
-import { IntParameter, Parameter, TextParameter, UserNameWithInfoParameter } from './hotlineParameters';
+import ServerToClientEventListener from '../shared/types/ServerToClientEvents.js';
+import { MessageUpdate, UserDetails, UserListUpdate } from '../shared/types/APITypes.js';
+import { UID } from '../shared/types/types.js';
+import { IntParameter, Parameter, TextParameter, UserNameWithInfoParameter } from './hotlineParameters.js';
 
 interface PromiseResultPair {
     resolve: (value: any) => void;
@@ -221,6 +221,7 @@ class HotlineSession {
                 case 300:
                 case opcodes.SERVER_NOTIFY_CHANGE_USER:
                 case opcodes.SERVER_NOTIFY_DELETE_USER:
+                case opcodes.SERVER_USER_ACCESS:
                     break;
                 default:
                     console.log(`Opcode ${opCode} is not yet supported by this client`);
@@ -339,6 +340,12 @@ class HotlineSession {
                     break;
                 case opcodes.SERVER_NOTIFY_DELETE_USER:
                     this.eventListener.notifyDeleteUser((parameters[0] as IntParameter).content);
+                    break;
+                case opcodes.SERVER_USER_ACCESS:
+                    // Set access privileges for the current user.
+                    let userAccess: number = (parameters.find(p => p.id === paramcodes.USER_ACCESS) as IntParameter)?.content;
+
+                    console.log(`User Access : ${userAccess}`)
                     break;
                 case opcodes.SERVER_NOTIFY_CHANGE_USER:
                     try {

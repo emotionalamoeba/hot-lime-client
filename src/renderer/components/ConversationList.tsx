@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { Container, ListGroup } from 'react-bootstrap'
-import { selectAllUserLists, selectUserListForSession } from 'src/shared/features/session/sessionSlice';
-import { setActiveConversation } from 'src/shared/features/ui/uiSlice';
-import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
-import { UserDetails } from 'src/shared/types/APITypes';
-import { UID } from 'src/shared/types/types';
+import { selectAllUserLists, selectUserListForSession } from '../../shared/features/session/sessionSlice';
+import { setActiveConversation } from '../../shared/features/ui/uiSlice';
+import { useAppDispatch, useAppSelector } from '../../shared/hooks';
+import { UserDetails } from '../shared/types/APITypes';
+import { UID } from '../shared/types/types';
 
 export function ConversationList() {
 

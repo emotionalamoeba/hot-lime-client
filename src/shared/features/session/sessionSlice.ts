@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { MessageUpdate, UserDetails, UserListUpdate } from 'src/shared/types/APITypes';
-import { Conversation, Message, UID } from 'src/shared/types/types';
+import { MessageUpdate, UserDetails, UserListUpdate } from '../../shared/types/APITypes';
+import { Conversation, Message, UID } from '../../shared/types/types';
 import { RootState, AppThunk } from '../../store';
-import produce from 'immer';
+import { produce } from 'immer';
 
 interface Session {
     sessionKey: UID;

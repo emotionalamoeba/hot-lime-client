@@ -1,22 +1,26 @@
 import path from 'path'
-import { format } from 'url'
 import { app, BrowserWindow, ipcMain, nativeTheme, session } from 'electron'
-import installExtension, {
-  REDUX_DEVTOOLS,
-  REACT_DEVELOPER_TOOLS
-} from 'electron-devtools-installer'
 import { is } from 'electron-util'
-import HotlineSession, { Parameter } from './hotlineSession'
+import { isDev } from 'electron-util/main'
+import * as url from 'node:url'
+import HotlineSession from './hotlineSession.js'
 
 import Store from 'electron-store'
-import { KeyValuePair } from 'src/shared/KeyValuePair'
-import ServerToClientEventListener from 'src/shared/types/ServerToClientEvents'
-import { MessageUpdate, UserListUpdate } from 'src/shared/types/APITypes'
+import { KeyValuePair } from '../shared/KeyValuePair.js'
+import ServerToClientEventListener from '../shared/types/ServerToClientEvents.js'
+import { MessageUpdate, UserListUpdate } from '../shared/types/APITypes.js'
+
+// Avoid GTK 4 issue
+if (process.platform === 'linux') {
+  app.commandLine.appendSwitch('gtk-version', '3');
+}
 
 const store = new Store();
 
 
 let win: BrowserWindow | null = null
+
+const dirname = path.dirname(new URL(import.meta.url).pathname)
 
 let hotlineSession: HotlineSession = new HotlineSession(store);
 
@@ -27,27 +31,26 @@ async function createWindow() {
     minHeight: 600,
     minWidth: 650,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      preload: path.join(dirname, 'preload.mjs'),
       nodeIntegration: true,
-      devTools: true,
     },
     show: false,
-    icon: path.join(__dirname, '/assets/icon.icns')
+    icon: path.join(dirname, '/assets/icon.icns')
   });
 
-  const isDev = is.development
 
   if (isDev) {
-    win.loadURL('http://localhost:9080')
-  } else {
-    win.loadURL(
-      format({
-        pathname: path.join(__dirname, 'index.html'),
-        protocol: 'file',
-        slashes: true,
-      }),
-    )
-  }
+      // this is the default port electron-esbuild is using
+      win.loadURL('http://localhost:9080')
+    } else {
+      win.loadURL(
+        url.format({
+          pathname: path.join(dirname, 'index.html'),
+          protocol: 'file',
+          slashes: true,
+        }),
+      )
+    }
 
   win.on('closed', () => {
     win = null
@@ -68,15 +71,8 @@ async function createWindow() {
   })
 }
 
-app.whenReady().then(() => {
-  installExtension(REDUX_DEVTOOLS)
-    .then((name) => console.log(`Added Extension:  ${name}`))
-    .catch((err) => console.log('An error occurred: ', err));
-}).then(() => {
-  if (win === null && app.isReady()) {
-    createWindow()
-  }
-});
+
+app.whenReady().then(createWindow)
 
 app.on('window-all-closed', () => {
   if (!is.macos) {
@@ -103,23 +99,23 @@ ipcMain.handle('connection:sendPublicMessage', (args, text: string) => {
 hotlineSession.setEventListener({
   privateMessage: function (from: number, message: string): void {
     console.log('Sending private message to frontend ' + JSON.stringify(message))
-    win.webContents.send('connection:privateMessage', { 'from': from, 'text': message })
+    win?.webContents.send('connection:privateMessage', { 'from': from, 'text': message })
   },
   publicMessage: function (message: MessageUpdate): void {
     console.log('Sending inbound public message to frontend ' + JSON.stringify(message))
-    win.webContents.send('connection:publicMessage', message)
+    win?.webContents.send('connection:publicMessage', message)
   },
   notifyDeleteUser: function (userID: number): void {
-    win.webContents.send('connection:notifyDeleteUser', userID)
+    win?.webContents.send('connection:notifyDeleteUser', userID)
   },
   notifyChangeUser(userID: number, userName: string): void {
-    win.webContents.send('connection:notifyChangeUser', { 'userID': userID, 'userName': userName })
+    win?.webContents.send('connection:notifyChangeUser', { 'userID': userID, 'userName': userName })
   },
   reportError(error: string): void {
-    win.webContents.send('connection:error', error)
+    win?.webContents.send('connection:error', error)
   },
   userList: function (userListUpdate: UserListUpdate): void {
-    win.webContents.send('connection:userList', userListUpdate)
+    win?.webContents.send('connection:userList', userListUpdate)
   }
 } as ServerToClientEventListener);
 
@@ -129,6 +125,13 @@ ipcMain.handle('getStoreValue', (event, key) => {
 
 ipcMain.handle('setStoreValue', (event, keyValuePair: KeyValuePair) => {
   console.log(`Keyvalue pair : ${JSON.stringify(keyValuePair)}`);
-  console.log(`setting store value ${keyValuePair.key} as ${keyValuePair.value}`)
-  return store.set(keyValuePair.key, keyValuePair.value);
+
+  const { key, value } = keyValuePair
+  if (!value) {
+    store.delete(key)
+    return
+  }
+  
+  console.log(`setting store value ${key} as ${value}`)
+  return store.set(key, value);
 });

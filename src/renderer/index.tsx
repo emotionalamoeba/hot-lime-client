@@ -1,13 +1,13 @@
 import React from 'react'
-import { render } from 'react-dom'
-import { App } from './App'
+import { createRoot } from 'react-dom/client'
+import { App } from './App.js'
 import './index.css'
 
-import { store } from '../shared/store';
+import { store } from '../shared/store.js';
 import { Provider } from 'react-redux';
-import { Loader } from './Loader';
-import { Listener } from './Listener';
-import HotlineAPI from 'src/shared/types/hotlineAPI';
+import { Loader } from './Loader.js';
+import { Listener } from './Listener.js';
+import HotlineAPI from '../shared/types/hotlineAPI.js';
 
 declare global {
     interface Window {
@@ -15,4 +15,8 @@ declare global {
     }
 }
 
-render(<Provider store={store}><App /><Loader /><Listener /></Provider>, document.getElementById('root'))
+const container = document.getElementById('root')
+if (container) {
+    const root = createRoot(container)
+root.render(<Provider store={store}><App /><Loader /><Listener /></Provider>, )
+}

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
 import { Col, Container, FormControl, InputGroup, Row } from 'react-bootstrap';
-import { selectServerAddress, selectConnected, selectUserName } from 'src/shared/features/settings/settingsSlice';
-import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
+import { selectServerAddress, selectConnected, selectUserName } from '../../shared/features/settings/settingsSlice';
+import { useAppDispatch, useAppSelector } from '../../shared/hooks';
 
 export function StatusPanel() {
 

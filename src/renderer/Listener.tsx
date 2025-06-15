@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import { useAppDispatch } from "src/shared/hooks";
+import { useAppDispatch } from "../shared/hooks";
 import {
   setUserListForSession,
   addMessage,
-} from "src/shared/features/session/sessionSlice";
-import { MessageUpdate, UserListUpdate } from "src/shared/types/APITypes";
+} from "../shared/features/session/sessionSlice";
+import { MessageUpdate, UserListUpdate } from "../shared/types/APITypes";
 
 /**
  * TODO - there must be a better way to link listeners to the redux store

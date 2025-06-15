@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-import "bootstrap/dist/css/bootstrap.min.css";
 import { Col, Container, Row } from "react-bootstrap";
-import { ControlPanel } from "./components/ControlPanel";
-import { useAppDispatch } from "src/shared/hooks";
-import { setServerAddress } from "src/shared/features/settings/settingsSlice";
-import { StatusPanel } from "./components/StatusPanel";
-import { ConversationList } from "./components/ConversationList";
-import { selectSessionIDS } from "src/shared/features/session/sessionSlice";
-import { ConversationHistory } from "./components/ConversationHistory";
+import { ControlPanel } from "./components/ControlPanel.js";
+import { useAppDispatch } from "../shared/hooks.js";
+import { setServerAddress } from "../shared/features/settings/settingsSlice.js";
+import { StatusPanel } from "./components/StatusPanel.js";
+import { ConversationList } from "./components/ConversationList.js";
+import { selectSessionIDS } from "../shared/features/session/sessionSlice.js";
+import { ConversationHistory } from "./components/ConversationHistory.js";
 
 interface Message {
   from: string;

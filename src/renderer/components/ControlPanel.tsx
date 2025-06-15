@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
 import { Col, Container, FormControl, InputGroup, Row } from 'react-bootstrap';
-import { selectServerAddress, selectUserName, setServerAddress, setUserName } from 'src/shared/features/settings/settingsSlice';
-import { useAppDispatch, useAppSelector } from 'src/shared/hooks';
+import { selectServerAddress, selectUserName, setServerAddress, setUserName } from '../../shared/features/settings/settingsSlice';
+import { useAppDispatch, useAppSelector } from '../../shared/hooks';
 
 import { store } from '../../shared/store';
 
